@@ -1,0 +1,2311 @@
+program LegionsOfChaosv12(input, output);
+
+uses crt, dos, graph, objects, views, menus, graphics, graph3, copyrite;
+
+const
+   black=0;
+   dark_blue=1;
+   green=2;
+   cyan=3;
+   red=4;
+   purple=5;
+   brown=6;
+   grey=7;
+   dark_grey=8;
+   blue=9;
+   light_green=10;
+   light_blue=11;
+   Light_red=12;
+   Magenta=13;
+   Yellow=14;
+   White=15;
+
+
+
+
+var
+{Other}
+   ch:char;
+   quit:boolean;
+   realname:string;
+   name:string;
+   class:string;
+   cheat:string;
+   cleanexit:boolean;
+   cmd:char;
+   cmd1:string;
+   cmd2:string;
+   cmd3:string;
+   cmd4:string;
+   cmd5:string;
+   cmd6:string;
+   cmd7:string;
+   cmd8:string;
+   cmd9:string;
+   line1:string;
+   line2:string;
+   line3:string;
+   line4:string;
+   line5:string;
+   rand:boolean;
+   gainedMONEY:longint;
+   gainedEXP:longint;
+   money:longint;
+   z:string;
+
+{Player Status var}
+
+   dammax:byte;
+   damage:byte;
+   defense:byte;
+   HP:integer;
+   HPmax:integer;
+   magic:byte;
+   MP:integer;
+   MPmax:integer;
+   ToHit:byte;
+   NumberAttack:byte;
+   Exp:longint;
+   Level:byte;
+   debug:boolean;
+   town:boolean;
+
+
+{Weapon/Armor var}
+   weapondamage:integer;
+     modifieddamage:integer;
+     attackdamage:integer;
+   armordefense:integer;
+     modifieddefense:integer;
+   weaponname:string;
+   armorname:string;
+
+{spells}
+   fire:string;
+   firedamage:byte;
+   bolt:string;
+   boltdamage:byte;
+   heal:string;
+   healdamage:byte;
+   full:string;
+   fulldamage:byte;
+   deth:string;
+   dethdamage:byte;
+   quak:string;
+   quakdamage:byte;
+   bliz:string;
+   blizdamage:byte;
+   dran:string;
+   drandamage:byte;
+   dranheal:byte;
+
+{Monster Status var}
+   monsterchance:integer;
+   monster:string;
+   monsterdamage:byte;
+   monsterHP:integer;
+   monsterdefense:integer;
+   monsternumberattack:byte;
+   monstermagic:integer;
+   monsterMP:integer;
+   monsterToHit:byte;
+   monsterweapon:string;
+   monsterweapondamage:byte;
+   monsterarmor:string;
+   monsterarmordefense:byte;
+
+procedure OpenGraph;
+
+var
+    GrDriver:integer;
+    DrModo:integer;
+    ErrCode:integer;
+
+begin
+    GrDriver:=detect;
+    InitGraph (grDriver,drmodo,'c:\ritual\program\turbo');
+    if ErrCode <> GrOK then
+     	writeln('Graphics error:', GraphErrorMsg (Errcode));
+
+end;
+
+
+
+
+
+
+
+procedure GetPlayerInformation;
+	begin
+          textcolor(black);
+          textbackground(black);
+          clrscr;
+          gotoxy(1,1);
+          textcolor(yellow);
+          textbackground(blue);
+          writeln('                             Legions of Chaos v1.2                             ');
+          textbackground(black);
+	     textcolor(dark_grey);
+	    { writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');}
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          textcolor(yellow);
+          textbackground(blue);
+          writeln('                                                                               ');
+          gotoxy(18,7);
+          textbackground(red);
+          textcolor(white);
+          writeln('ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ Question 1 ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿');
+          gotoxy(18,8);
+          writeln('³                                           ³');
+          gotoxy(18,9);
+          writeln('³ What is your real name?  (First and Last) ³');
+          gotoxy(18,10);
+          writeln('³                                           ³');
+          gotoxy(18,11);
+          writeln('³                                           ³');
+          gotoxy(18,12);
+          writeln('³                                           ³');
+          gotoxy(18,13);
+          writeln('ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ');
+          repeat
+          	gotoxy(20,12);
+               textbackground(black);
+	          textcolor(white);
+	          writeln('                                         ');
+	          gotoxy(21,12);
+	          readln(realname);
+               if realname='' then
+               	writeln(chr(7));
+          until realname<>'';
+          gotoxy(44,7);
+          textcolor(white);
+          textbackground(red);
+          writeln('2');
+          gotoxy(18,9);
+          writeln('³ What will your characters name be?        ³');
+          repeat
+	          gotoxy(20,12);
+	          textbackground(black);
+	          textcolor(white);
+	          writeln('                                         ');
+	          gotoxy(21,12);
+	          readln(name);
+               if name='' then
+               	writeln(chr(7));
+          until name<>'';
+          gotoxy(18,12);
+          textbackground(red);
+          textcolor(white);
+          writeln('³                                           ³');
+          gotoxy(44,7);
+          textcolor(white);
+          textbackground(red);
+          writeln('3');
+          repeat
+               textcolor(white);
+               textbackground(red);
+               gotoxy(18,8);
+               writeln('³ Choose a class ...                        ³');
+               gotoxy(18,9);
+               writeln('³ (W)arrior                                 ³');
+               gotoxy(18,10);
+               writeln('³ (R)ogue                                   ³');
+               gotoxy(18,11);
+               writeln('³ (S)orcerer                                ³');
+               gotoxy(38,12);
+               textbackground(black);
+               textcolor(white);
+               writeln('   ');
+               gotoxy(39,12);
+               ch:=readkey;
+          until (ch='w') or (ch='W') or (ch='r') or (ch='R') or (ch='s') or (ch='S');
+          case ch of
+          	'w','W': class:='Warrior';
+               'r','R': class:='Rogue';
+               's','S': class:='Sorcerer';
+          end;
+
+
+	end;
+
+
+procedure InitalizePlayerStats;
+	begin
+     	randomize;
+          textcolor(blue);
+          gotoxy(1,1);
+          writeln('Initalizing combat sequence...');
+          textcolor(grey);
+          if class='Warrior' then
+               begin
+                    Level:=1;
+		     	damage:=random(20)+20; {20-40}
+                    dammax:=50;
+                    defense:=random(20)+50; {50-70}
+				magic:=random(10)+1; {1-10}
+                    HP:=random(25)+100; {100-125}
+                    numberattack:=1;
+               end;
+          if class='Rogue' then
+               begin
+                    LEvel:=1;
+	          	damage:=random(20)+10; {10-30}
+                    dammax:=40;
+                    defense:=random(20)+30; {30-50}
+                    magic:=random(10)+20; {20-30}
+                    HP:=random(25)+80; {80-105}
+                    numberattack:=2;
+               end;
+          if class='Sorcerer' then
+          	begin
+                    Level:=1;
+	          	damage:=random(10)+10; {10-20}
+                    dammax:=30;
+                    defense:=random(20)+20; {20-40}
+                    magic:=random(30)+50; {50-80}
+                    heal:='Healing';
+                    healdamage:=random(15)+5; {5-20}
+                    fire:='Fireball';
+                    firedamage:=random(20)+magic; {1-20}
+                    bolt:='Lightning Bolt';
+				bliz:='Blizzard';
+                    quak:='Earthquake';
+                    full:='Full Healing';
+                    deth:='Deathray';
+                    dran:='Drain Life';
+                    HP:=random(25)+50; {50-75}
+                    numberattack:=1;
+               end;
+          Tohit:=45; {65%}
+		HPmax:=HP;
+          MP:=magic*2;            {(magic) x 2}
+          MPmax:=MP;
+          weaponname:='Dagger';
+            weapondamage:=random(10)+1;
+            modifieddamage:=damage+weapondamage;
+          armorname:='Leather Armor';
+            armordefense:=random(5)+1;
+            modifieddefense:=armordefense+defense;
+          EXP:=0;
+     end;
+
+procedure GraphicWindow;
+     begin
+	     textbackground(black);
+          textcolor(white);
+          gotoxy(5,4);
+          writeln('ÚÄÄÄÄÄÄÄÄÄÄÄ´ Commands ÃÄÄÄÄÄÄÄÄÄÄÄ¿');
+          gotoxy(5,5);
+          writeln('³                                  ³');
+          gotoxy(5,6);
+		writeln('³                                  ³');
+          gotoxy(5,7);
+		writeln('³                                  ³');
+          gotoxy(5,8);
+          writeln('³                                  ³');
+          gotoxy(5,9);
+          writeln('³                                  ³');
+          gotoxy(5,10);
+          writeln('³                                  ³');
+          gotoxy(5,11);
+          writeln('³                                  ³');
+          gotoxy(5,12);
+          writeln('³                                  ³');
+          gotoxy(5,13);
+          writeln('³  ` - command console             ³');
+          gotoxy(5,14);
+          writeln('ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ');
+          gotoxy(7,5);
+          writeln(cmd1);
+          gotoxy(7,6);
+          writeln(cmd2);
+          gotoxy(7,7);
+          writeln(cmd3);
+          gotoxy(7,8);
+          writeln(cmd4);
+          gotoxy(7,9);
+          writeln(cmd5);
+          gotoxy(7,10);
+          writeln(cmd6);
+          gotoxy(7,11);
+          writeln(cmd7);
+          gotoxy(7,12);
+          writeln(cmd8);
+	end;
+
+procedure StatsWindow;
+	begin
+          gotoxy(52,5);
+          textbackground(blue);
+          textcolor(white);
+          writeln('ÚÄÄÄÄÄÄ´ Stats ÃÄÄÄÄÄÄ¿');
+          gotoxy(52,6);
+          writeln('³ Dmg     HP     /    ³');
+          gotoxy(52,7);
+          writeln('³ Mag     MP     /    ³');
+          gotoxy(52,8);
+          writeln('³ Def                 ³');
+          gotoxy(52,9);
+          writeln('³ Lvl                 ³');
+          gotoxy(52,10);
+          writeln('³ Exp                 ³');
+          gotoxy(52,11);
+          writeln('ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ');
+          gotoxy(65,6);
+          writeln(HP);
+          gotoxy(70,6);
+          writeln(HPMax);
+          gotoxy(65,7);
+          writeln(MP);
+          gotoxy(70,7);
+          writeln(MPMax);
+          gotoxy(58,10);
+          writeln(EXP);
+          gotoxy(58,6);
+          writeln(modifieddamage);
+          gotoxy(58,7);
+          writeln(magic);
+          gotoxy(58,8);
+          writeln(modifieddefense);
+          gotoxy(58,9);
+          writeln(level);
+	end;
+
+procedure DrawMsgWindow;
+	begin
+          gotoxy(5,17);
+          textbackground(red);
+          textcolor(white);
+          writeln('                                                                       ');
+          gotoxy(5,18);
+          writeln('                                                                       ');
+          gotoxy(5,19);
+          writeln('                                                                       ');
+          gotoxy(5,20);
+          writeln('                                                                       ');
+          gotoxy(5,21);
+          writeln('                                                                       ');
+     	gotoxy(7,17);
+          writeln(line1);
+     	gotoxy(7,18);
+          writeln(line2);
+     	gotoxy(7,19);
+          writeln(line3);
+     	gotoxy(7,20);
+          writeln(line4);
+     	gotoxy(7,21);
+          writeln(line5);
+	end;
+
+procedure DrawCommandWindow;
+	begin
+     	gotoxy(50,14);
+          textcolor(grey);
+          textbackground(black);
+          writeln(' Command:            ');
+	end;
+
+procedure MainScreen;
+	begin
+          textcolor(black);
+          textbackground(black);
+          clrscr;
+          clrscr;
+          gotoxy(1,1);
+          textcolor(yellow);
+          textbackground(blue);
+          writeln('                             Legions of Chaos v1.2                             ');
+          textbackground(black);
+	     textcolor(dark_grey);
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          textcolor(yellow);
+          textbackground(blue);
+          writeln('                                  Ritual ''97                                   ');
+     	DrawMsgWindow;
+          StatsWindow;
+          GraphicWindow;
+          DrawCommandWindow;
+	end;
+
+
+procedure DebugHelp;
+	begin
+		clrscr;
+          textcolor(white);
+          writeln('Here are the commands for the Legions of Chaos v1.1 debug codes');
+		writeln('I don''t know wether to call it a debug mode, or a cheat mode.');
+          writeln('Putting a number for a character value instead of characters will ');
+          writeln('crash the program.  Likewise, characters for a numeric value.');
+          writeln('Edit Name            = 1            Edit Attacks/Round   = C');
+     	writeln('Edit Class           = 2            Edit Weapon Name     = D');
+         	writeln('Edit Damage          = 3            Edit Weapon Damage   = E');
+          writeln('Edit Defense         = 4            Edit Modified WeapDmg= F');
+          writeln('Edit Magic           = 5            Edit Armor Name      = G');
+          writeln('Edit Real name       = 6            Edit Armor Defense   = H');
+          writeln('Edit HP Value        = 7            Edit Modified ArmrDef= I');
+          writeln('Edit MP Value        = 8            Edit Spell Abilities = J');
+          writeln('Edit Experience value= 9            Edit Money           = K');
+          writeln('Edit ToHit%          = 0            Edit ALL ATTRIBUTES  = Z');
+          WRITELN('Edit Attack Damage   = A');
+          writeln('Edit Armor Defense   = B');
+          writeln('');
+          writeln('');
+          writeln('');
+          writeln('');
+          writeln('');
+          writeln('');
+          writeln('');
+          readkey;
+     end;
+
+procedure GetAllSpells;
+	begin
+          firedamage:=1;
+          boltdamage:=1;
+		healdamage:=1;
+          fulldamage:=1;
+          dethdamage:=1;
+          quakdamage:=1;
+          blizdamage:=1;
+          drandamage:=1;
+          dranheal:=drandamage;
+          textcolor(green);
+          writeln('Why, you feel better already!'); delay(1000);
+          readkey;
+     end;
+
+procedure EditHealingSpell;
+	begin
+     	gotoxy(1,24);
+          textcolor(light_red);
+          writeln('Enter new value:');
+          gotoxy(18,24);
+          textcolor(dark_grey);
+          readln(HealDamage);
+     	textcolor(green);
+          writeln('Why, you feel better already!'); delay(1000);
+     end;
+
+procedure EditFireballSpell;
+	begin
+     	gotoxy(1,24);
+          textcolor(light_red);
+          writeln('Enter new value:');
+          gotoxy(18,24);
+          textcolor(dark_grey);
+          readln(fireDamage);
+         	textcolor(green);
+          writeln('Why, you feel better already!'); delay(1000);
+          end;
+
+Procedure EditLightningboltSpell;
+	begin
+     	gotoxy(1,24);
+          textcolor(light_red);
+          writeln('Enter new value:');
+          gotoxy(18,24);
+          textcolor(dark_grey);
+          readln(boltDamage);
+	     textcolor(green);
+          writeln('Why, you feel better already!'); delay(1000);
+           end;
+
+procedure EditBlizzardSpell;
+	begin
+     	gotoxy(1,24);
+          textcolor(light_red);
+          writeln('Enter new value:');
+          gotoxy(18,24);
+          textcolor(dark_grey);
+          readln(BlizDamage);
+     textcolor(green);
+          writeln('Why, you feel better already!'); delay(1000);
+          end;
+
+procedure EditEarthquakeSpell;
+	begin
+     	gotoxy(1,24);
+          textcolor(light_red);
+          writeln('Enter new value:');
+          gotoxy(18,24);
+          textcolor(dark_grey);
+          readln(quakdamage);
+	     textcolor(green);
+          writeln('Why, you feel better already!'); delay(1000);
+          end;
+
+procedure EditFullHealingSpell;
+	begin
+     	gotoxy(1,24);
+          textcolor(light_red);
+          writeln('Enter new value:');
+          gotoxy(18,24);
+          textcolor(dark_grey);
+          readln(FullDamage);
+     textcolor(green);
+          writeln('Why, you feel better already!'); delay(1000);
+          end;
+
+procedure EditDeathraySpell;
+	begin
+     	gotoxy(1,24);
+          textcolor(light_red);
+          writeln('Enter new value:');
+          gotoxy(18,24);
+          textcolor(dark_grey);
+          readln(dethDamage);
+	     textcolor(green);
+          writeln('Why, you feel better already!'); delay(1000);
+          end;
+
+procedure EditDrainLifeSpell;
+	begin
+     	gotoxy(1,24);
+          textcolor(light_red);
+          writeln('Enter new value:');
+          gotoxy(18,24);
+          textcolor(dark_grey);
+          readln(dranDamage);
+          dranheal:=drandamage;
+	     textcolor(green);
+          writeln('Why, you feel better already!'); delay(1000);
+          end;
+
+procedure EditAllSpells;
+  var allspells:integer;
+	begin
+     	gotoxy(1,24);
+          textcolor(light_red);
+          writeln('Enter new value:');
+          gotoxy(18,24);
+          textcolor(dark_grey);
+          readln(allspells);
+          healdamage:=allspells;
+          blizdamage:=allspells;
+          firedamage:=allspells;
+          boltdamage:=allspells;
+          fulldamage:=allspells;
+          quakdamage:=allspells;
+          drandamage:=allspells;
+          dethdamage:=allspells;
+	     textcolor(green);
+          writeln('Why, you feel better already!'); delay(1000);
+           end;
+
+
+
+procedure EditSpells;
+  var ch:char;
+	begin
+          repeat
+               bolt:='Lightning Bolt';
+			bliz:='Blizzard';
+               quak:='Earthquake';
+               full:='Full Healing';
+               deth:='Deathray';
+               dran:='Drain Life';
+               heal:='Healing';
+               fire:='Fireball';
+		     clrscr;
+     	     gotoxy(1,1);
+               textcolor(white);
+               writeln('This is a hard process, so please take the time to read all of the');
+               writeln('directions, not choosing to read them will result in a crash.');
+               writeln;
+               writeln('Get all the spells                           = 1');
+               writeln('Change the value of the HEALING spell        = 2');
+               writeln('Change the value of the FIREBALL spell       = 3');
+               writeln('Change the value of the LIGHTNING BOLT spell = 4');
+               writeln('Change the value of the BLIZZARD spell       = 5');
+               writeln('Change the value of the EARTHQUAKE spell     = 6');
+               writeln('Change the value of the FULL HEALING spell   = 7');
+               writeln('Change the value of the DEATHRAY spell       = 8');
+               writeln('Change the value of the DRAIN LIFE spell     = 9');
+               writeln('Change the value of the ALL spells           = 0');
+               writeln('Quit Altering Spell the Menu                 = Q');
+		     writeln;
+               textcolor(light_red);
+               writeln('Your command master?');
+               gotoxy(22,16);
+               ch:=readkey;
+          	if ch='1' then GetAllSpells;
+               if ch='2' then EditHealingSpell;
+               if ch='3' then EditFireballSpell;
+               if ch='4' then EditLightningboltSpell;
+               if ch='5' then EditBlizzardSpell;
+               if ch='6' then EditEarthquakeSpell;
+               if ch='7' then EditFullHealingSpell;
+               if ch='8' then EditDeathraySpell;
+               if ch='9' then EditDrainLifeSpell;
+               if ch='0' then EditAllSpells;
+
+		until (ch='Q') or (ch='q');
+
+     end;
+
+
+
+
+procedure EditALLAttributes;
+  var z:byte;
+  	begin
+          gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(z);
+          HPmax:=z;
+          MPmax:=z;
+          MP:=z;
+          HP:=z;
+          damage:=z;
+          modifieddamage:=z;
+          defense:=z;
+          modifieddefense:=z;
+		dammax:=z;
+          weapondamage:=z;
+          tohit:=1;
+          magic:=z;
+          armordefense:=z;
+          healdamage:=z;
+          firedamage:=z;
+          boltdamage:=z;
+          blizdamage:=z;
+          quakdamage:=z;
+          fulldamage:=z;
+          dethdamage:=z;
+          drandamage:=z;
+          dranheal:=z;
+          EXP:=z;
+     end;
+
+
+procedure EditToHit;
+	begin
+		gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(ToHit);
+     end;
+
+procedure EditModifiedDefense;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(modifieddefense);
+     end;
+
+
+
+
+procedure EditModifiedDamage;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(ModifiedDamage);
+     end;
+
+
+procedure EditWeaponDamage;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(weapondamage);
+     end;
+
+
+
+procedure EditArmorName;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(Armorname);
+     end;
+
+
+procedure EditWeaponName;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(weaponname);
+     end;
+
+
+procedure EditAttacksPerRound;
+	begin
+        	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('This option is not fully implemented, you cannot modify it');
+		readkey;
+     end;
+
+
+
+procedure EditAttackDamage;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter 1st Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(modifieddamage);
+          gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter 2nd Value:');
+          gotoxy(18,22);
+          textcolor(black);
+          writeln('                                                   ');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(dammax);
+     end;
+
+
+procedure EditEXP;
+
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(EXP);
+     end;
+
+procedure EditMP;
+ var  z:integer;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(z);
+          MP:=z;
+          MPmax:=z;
+     end;
+
+
+procedure EditHP;
+  var z:integer;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(z);
+          HP:=z;
+          HPMax:=z;
+     end;
+
+
+procedure EditDamage;
+	begin
+		gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(Damage);
+     end;
+
+
+procedure EditMoney;
+	begin
+		gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(Money);
+     end;
+
+procedure EditRealName;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(realname);
+     end;
+
+
+procedure EditMagic;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(magic);
+     end;
+
+procedure EditArmorDefense;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(armordefense);
+     end;
+
+
+
+procedure EditDefense;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(defense);
+     end;
+
+procedure ChangeClass;
+	begin
+     	gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(class);
+	end;
+
+procedure ChangeName;
+	begin
+          gotoxy(1,22);
+          textcolor(light_red);
+          writeln('Enter new Value:');
+          textcolor(dark_grey);
+          gotoxy(18,22);
+          readln(name);
+     end;
+
+
+procedure DisplayPlayerStats(var debug:boolean);
+  var key:char;
+	begin
+     	repeat
+               clrscr;
+               gotoxy(1,22);
+               textcolor(black);
+               writeln('                                                            ');
+               gotoxy(1,23);
+               writeln('                                          ');
+               gotoxy(1,1);
+     	     textcolor(grey);
+     	     writeln('Here are your player stats:');
+               writeln;
+               writeln('Name    : ',name);
+               writeln('Class   : ',class);
+               writeln('Damage  : ',damage);
+               writeln('Defense : ',defense);
+               writeln('Magic   : ',magic);
+               writeln;
+               gotoxy(39,3);
+               writeln('Your name: ',realname);
+               gotoxy(39,4);
+               writeln('HP: ',HP,'/',HPmax);
+               gotoxy(39,5);
+               writeln('MP: ',MP,'/',MPmax);
+               gotoxy(38,6);
+               writeln('EXP: ',exp);
+               gotoxy(36,7);
+               writeln('ToHit: ',100-tohit,'%');
+               writeln;
+               writeln('Attack Damage    : ',modifieddamage,'-',dammax);
+               writeln('Armor Defense    : ',modifieddefense);
+               writeln('Attacks per round: ',numberattack);
+               writeln;
+               writeln('Weapon           : ',weaponname);
+               writeln(' Damage          : ',weapondamage);
+               writeln(' Modified Damage : ',modifieddamage);
+               writeln;
+               writeln('Armor            : ',armorname);
+               writeln(' Defense         : ',armordefense);
+               writeln(' Modified Defense: ',modifieddefense);
+               gotoxy(39,9);
+               textcolor(grey);
+               writeln('Gold: ');
+               gotoxy(45,9);
+               writeln(money);
+               gotoxy(39,11);
+               textcolor(white);
+               writeln('Spells');
+               textcolor(grey);
+               gotoxy(39,12);
+               textcolor(dark_grey);
+     	     if healdamage>0 then
+          	     textcolor(grey)
+               else
+                    begin
+		               textcolor(dark_grey);
+                    end;
+               writeln('Healing           ',healdamage);
+               gotoxy(39,13);
+               if firedamage>0 then
+          	     textcolor(grey)
+               else
+                    begin
+		               textcolor(dark_grey);
+                    end;
+               writeln('Fireball          ',firedamage);
+               gotoxy(39,14);
+               if boltdamage>0 then
+          	     textcolor(grey)
+               else
+                    begin
+		               textcolor(dark_grey);
+                    end;
+               writeln('Lightning Bolt    ',boltdamage);
+               gotoxy(39,15);
+               if blizdamage>0 then
+          	     textcolor(grey)
+               else
+                    begin
+		               textcolor(dark_grey);
+                    end;
+               writeln('Blizzard          ',blizdamage);
+               gotoxy(39,16);
+               if quakdamage>0 then
+          	     textcolor(grey)
+               else
+                    begin
+		               textcolor(dark_grey);
+                    end;
+               writeln('Earthquake        ',quakdamage);
+               gotoxy(39,17);
+               if fulldamage>0 then
+          	     textcolor(grey)
+               else
+                    begin
+		               textcolor(dark_grey);
+                    end;
+               writeln('Full Healing      ',fulldamage);
+               gotoxy(39,18);
+               if dethdamage>0 then
+          	     textcolor(grey)
+               else
+                    begin
+		               textcolor(dark_grey);
+                    end;
+               writeln('Deathray          ',dethdamage);
+		     gotoxy(39,19);
+               if drandamage>0 then
+          	     textcolor(grey)
+               else
+                    begin
+		               textcolor(dark_grey);
+                    end;
+               writeln('Drain Life        ',drandamage);
+               gotoxy(1,23);
+               textcolor(black);
+               if debug=false then
+	               readln(cheat);
+               if (cheat='suck blue frog') or (cheat='Suck blue frog') or (debug=true) then
+          	     begin
+                         debug:=true;
+                    	gotoxy(1,21);
+                         textcolor(blue);
+                    	writeln('DEBUG MODE ACTIVATED');
+                         gotoxy(1,23);
+                         textcolor(black);
+                         writeln('                                                       ');
+                         gotoxy(1,23);
+                         textcolor(dark_grey);
+                         key:=readkey;
+                    	if (key='q') or (key='Q') then debug:=false;
+                    	if (key='h') or (key='H') or (key='?') then DebugHelp;
+                    	if (key='1') then ChangeName;
+                    	if key='2' then ChangeClass;
+                         if key='3' then EditDamage;
+                         if key='4' then EditDefense;
+                         if key='5' then EditMagic;
+                         if key='6' then EditRealname;
+                         if key='7' then EditHP;
+                         if key='8' then EditMP;
+                         if key='9' then EditEXP;
+                         if key='0' then EditToHit;
+                         if (key='a') or (key='A') then EditAttackDamage;
+                         if (key='b') or (key='B') then EditArmorDefense;
+                         if (key='c') or (key='C') then EditAttacksPerRound;
+					if (key='d') or (key='D') then EditWeaponName;
+                         if (key='e') or (key='E') then EditWeaponDamage;
+                         if (key='f') or (key='F') then EditModifiedDamage;
+                         if (key='g') or (key='G') then EditArmorName;
+                    	if (key='h') or (key='H') then EditArmorDefense;
+					if (key='I') or (key='i') then EditModifiedDefense;
+                         if (key='j') or (key='J') then EditSpells;
+                         if (key='k') or (key='K') then EditMoney;
+                    	if (key='z') or (key='Z') then EditALLAttributes;
+                    end;
+          until debug=false;
+         	if rand=true then MainScreen;
+     end;
+
+
+Procedure UpdateStatsWindow;
+	begin
+          gotoxy(52,5);
+          textbackground(blue);
+          textcolor(white);
+          writeln('ÚÄÄÄÄÄÄ´ Stats ÃÄÄÄÄÄÄ¿');
+          gotoxy(52,6);
+          writeln('³ Dmg     HP     /    ³');
+          gotoxy(52,7);
+          writeln('³ Mag     MP     /    ³');
+          gotoxy(52,8);
+          writeln('³ Def                 ³');
+          gotoxy(52,9);
+          writeln('³ Lvl                 ³');
+          gotoxy(52,10);
+          writeln('³ Exp                 ³');
+          gotoxy(52,11);
+          writeln('ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ');
+          gotoxy(65,6);
+          writeln(HP);
+          gotoxy(70,6);
+          writeln(HPMax);
+          gotoxy(65,7);
+          writeln(MP);
+          gotoxy(70,7);
+          writeln(MPMax);
+          gotoxy(58,10);
+          writeln(EXP);
+          gotoxy(58,6);
+          writeln(modifieddamage);
+          gotoxy(58,7);
+          writeln(magic);
+          gotoxy(58,8);
+          writeln(modifieddefense);
+          gotoxy(58,9);
+          writeln(level);
+	end;
+
+
+
+procedure UpdateDisplay;
+	begin
+     	MainScreen;
+     	GraphicWindow;
+          UpdateStatsWindow;
+     	DrawMsgWindow;
+     end;
+
+
+procedure ClearLines;
+	begin
+		line1:='';
+		line2:='';
+		line3:='';
+		line4:='';
+		line5:='';
+          gotoxy(5,17);
+          textbackground(red);
+          writeln('                                                                         ');
+          gotoxy(5,18);
+          writeln('                                                                         ');
+          gotoxy(5,19);
+          writeln('                                                                         ');
+          gotoxy(5,20);
+          writeln('                                                                         ');
+          gotoxy(5,21);
+          writeln('                                                                         ');
+	    	UpdateDisplay;
+     end;
+
+procedure ClearDisplay;
+	begin
+     	cmd1:='                               ';
+          cmd2:='                               ';
+          cmd3:='                               ';
+          cmd4:='                               ';
+          cmd5:='                               ';
+          cmd6:='                               ';
+          cmd7:='                               ';
+          line1:='                                                             ';
+		line2:='                                                             ';
+		line3:='                                                             ';
+		line4:='                                                             ';
+		line5:='                                                             ';
+          gotoxy(5,17);
+          textbackground(red);
+          writeln('                                                                         ');
+          gotoxy(5,18);
+          writeln('                                                                         ');
+          gotoxy(5,19);
+          writeln('                                                                         ');
+          gotoxy(5,20);
+          writeln('                                                                         ');
+          gotoxy(5,21);
+          writeln('                                                                         ');
+	    	UpdateDisplay;
+     end;
+
+procedure Writecmd8;
+	begin
+          cleardisplay;
+          cmd8:='F10- Quit Game';
+     	updatedisplay;
+	end;
+
+
+procedure Clearcmd8;
+	begin
+          ClearDisplay;
+     	cmd8:='                 ';
+          updatedisplay;
+     end;
+
+
+procedure GetSword;
+ var x,a,z,s1,s2:integer; prefix1,suffix1,p1,p2:string;
+	begin
+
+		x:=random(109)+1;
+          case x of
+          	1..5: prefix1:='Fool''s';
+               6..10: prefix1:='Gold';
+			11..15: prefix1:='Master''s';
+               16..20: prefix1:='King''s';
+               21..25: prefix1:='Weak';
+               26..30: prefix1:='Devils';
+               31..35: prefix1:='Magical';
+               36..40: prefix1:='Warrior''s';
+               41..45: prefix1:='Magician''s';
+               46..50: prefix1:='Idiot''s';
+               51..55: prefix1:='Gladiator''s';
+               56..60: prefix1:='Arch-Angel''s';
+               61..65: prefix1:='Careless';
+               66..70: prefix1:='Ruthless';
+               71..75: prefix1:='Silver';
+               76..80: prefix1:='Bronze';
+               81..85: prefix1:='Tin';
+               86..90: prefix1:='Dwarf''s';
+               91..95: prefix1:='Rogue''s';
+               96..100: prefix1:='Wizards';
+               101..105: prefix1:='Ritual''s';
+               106..110: prefix1:='Godly';
+          end;
+          if (prefix1='Ritual''s') and (suffix1='of Blood') then
+          else
+          begin
+			z:=random(99)+1;
+	          if z>40 then
+	          	begin
+	                    a:=random(119)+1;
+	                    case a of
+	                    	1..5: suffix1:='of the Heavens';
+	                         6..10: suffix1:='of Light';
+	                         11..15: suffix1:='of the Ages';
+	                         16..20: suffix1:='of Death';
+	                         21..25: suffix1:='of Life';
+	                         26..30: suffix1:='of Health';
+	                         31..35: suffix1:='of Strength';
+	                         36..40: suffix1:='of Might';
+	                         41..45: suffix1:='of the Titans';
+	                         46..50: suffix1:='of Blood';
+	                         51..55: suffix1:='of the Weak';
+	                         56..60: suffix1:='of Carelessness';
+	                         61..65: suffix1:='of Balance';
+	                         66..70: suffix1:='of Magic';
+	                         71..75: suffix1:='of Mana';
+	                         76..80: suffix1:='of Defense';
+	                         81..85: suffix1:='of Precision';
+	                         86..90: suffix1:='of Perfection';
+	                         91..95: suffix1:='of Dislexia';
+	                         96..100: suffix1:='of the Moon';
+	                         101..105: suffix1:='of the Stars';
+	                         106..110: suffix1:='of Venus';
+	                         115..120: suffix1:='of Mystery';
+                    	end;
+				end;
+          end;
+		gotoxy(6,19);
+          writeln('You got a new weapon!');
+     	gotoxy(6,20);
+          writeln('You got a ',prefix1,' sword ',suffix1,'!');
+     end;
+
+procedure GetArmor;
+	begin
+
+     end;
+
+procedure GetSpell;
+	begin
+     end;
+
+procedure GetTreasure;
+	begin
+     end;
+
+procedure GainSpecial;
+  var x:integer;
+  	begin
+     	x:=random(9)+1;
+          case x of
+          	1: GetSword;
+               2: GetArmor;
+               3: GetSpell;
+               4: GetSword;
+               5: GetArmor;
+               6: GetSpell;
+               7: GetSword;
+               8: GetArmor;
+               9: GetSpell;
+              10: GetTreasure;
+          end;
+     end;
+
+
+
+procedure QuitPrompt;
+ var x:integer;
+	begin
+          ClearDisplay;
+          UpdateDisplay;
+		x:=random(99)+1;
+          case x of
+	          0..20: line1:='Don''t touch that dial!';
+               50: line1:='If you quit, I will delete your character!';
+	          21..40: line1:='Don''t even think about pressing that button!';
+	          41..60: line1:='But you have to save the world first!';
+	          61..80: line1:='Formatting drive C:  Press Y to confirm.';
+	          81..100: line1:='Warning! If you press Y you will get a virus!';
+          end;
+          repeat
+			line2:='             Quit(Y/N)?';
+	          cmd1:=' Y - Quit';
+	          cmd2:=' N - Continue';
+	          UpdateDisplay;
+	          ch:=readkey;
+	          if (ch='y') or (ch='Y') then begin textbackground(0); textcolor(grey); clrscr; end;
+          until (ch='y') or (ch='Y') or (ch='N') or (ch='n');
+     end;
+
+
+procedure CastSpell;
+ var s:string; z,y,x,a,b,c:integer;
+	begin
+		clearcmd8;
+          if town=true then
+          	begin
+               	cleardisplay;
+                    cmd8:='F10- Quit Game';
+                    line1:='This is not a good place to practice your spells...';
+                    updatedisplay;
+                    exit;
+               end;
+          line1:='Type in the name of the spell you want to cast.';
+          line2:='Make sure you type in the full name of the spell.';
+          if healdamage>0 then
+	          cmd1:='Healing';
+          if firedamage>0 then
+	          cmd2:='Fireball';
+          if boltdamage>0 then
+	          cmd3:='Lightning Bolt';
+          if blizdamage>0 then
+          	cmd4:='Blizzard';
+          if quakdamage>0 then
+          	cmd5:='Earthquake';
+          if fulldamage>0 then
+          	cmd6:='Full Healing';
+          if dethdamage>0 then
+          	cmd7:='Deathray';
+		if drandamage>0 then
+          	cmd8:='Drain Life';
+          updatedisplay;
+	     textcolor(white);
+	     textbackground(black);
+		gotoxy(7,22);
+	     writeln('Spell:                                                             ');
+	     gotoxy(14,22);
+	     textcolor(grey);
+	     readln(s);
+          clearlines;
+		if (s='healing') or (s='Healing') or (s='HEALING') then
+          	begin
+                    if MP>9 then
+                    	begin
+		               	line1:='You cast healing!';
+		                    gotoxy(7,18);
+		                    z:=random(healdamage)+random(magic);
+		                    writeln('You have recovered ',z,' hitpoints,');
+		                    updatedisplay;
+		                    delay(1000);
+                         end
+                    else
+                    	begin
+                         	cleardisplay;
+                              line1:='You do not have enough mana';
+                              updatedisplay;
+                              delay(1000);
+                         end;
+               end;
+          if (s='Fireball') or (s='FireBall') or (s='FIREBALL') or (s='fireball') then
+          	begin
+                  {  if MP<17}
+               end;
+          if (s='lightning bolt') or (s='Lightning bolt') or (s='Lightning Bolt') or (s='lightningbolt') or (s='bolt') then
+          	begin
+               end;
+          if (s='blizzard') or (s='Blizzard') or (s='BLIZZARD') then
+          	begin
+               end;
+          if (s='Earthquake') or (s='EarthQuake') or (s='EARTHQUAKE') or (s='earthquake') then
+          	begin
+               end;
+          if (s='Full Healing') or (s='full healing') or (s='Full healing') or (s='FULL HEALING') or (s='full') then
+          	begin
+               	line1:='You cast full healing!';
+                    gotoxy(8,18);
+                    writeln('You have fully recovered from your wounds');
+                    HP:=HPmax;
+                    updatedisplay;
+                    delay(1000);
+               end;
+          if (s='Deathray') or (s='DeathRay') or (s='deathray') or (s='DEATHRAY') then
+          	begin
+                    if MP>199 then
+                    	begin
+		               	line1:='You cast Deathray!';
+		                    MP:=MP-200;
+		                    gotoxy(8,18);
+		                    writeln('You zap the ',monster,'!');
+		                    updatedisplay;
+		                    delay(1000);
+		                    gotoxy(8,19);
+		                    writeln('You hit the ',monster,' for ',monsterHP,' damage!');
+		                    gotoxy(8,20);
+     		               monsterHP:=0;
+		                    writeln('You have killed the ',monster,'!');
+		                    delay(1000);
+                         end
+                    else
+                    	begin
+                         	line1:='You don''t have enough mana!';
+                              updatedisplay;
+                              delay(1000);
+                         end;
+
+               end;
+          if (s='Drain Life') or (s='Drain life') or (s='drain life') or (s='drainlife') or (s='DRAIN LIFE') then
+          	begin
+               end;
+          gotoxy(7,22);
+          textbackground(black);
+	     textcolor(dark_grey);
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          MainScreen;
+          UpdateDisplay;
+		writecmd8;
+     end;
+
+procedure ConsoleWindow;
+ var c:string;
+     begin
+          rand:=true;
+          repeat
+               updatedisplay;
+	          textcolor(white);
+	          textbackground(black);
+			gotoxy(7,22);
+	          writeln(':                                                                  ');
+	          gotoxy(8,22);
+	          textcolor(grey);
+	          readln(c);
+          	if c='updatedisplay' then UpdateDisplay;
+          	if (c='quitgame') or (c='quit game') then begin quit:=true; c:='exit'; end;
+               if (c='cast spell') or (c='castspell') or (c='CAST SPELL') then CastSpell;
+          	if (c='stats') or (c='playerstats') then DisplayPlayerStats(debug);
+          until (c='exit') or (c='quit') or (c='Exit') or (c='Quit') or (c='') or (c='');
+          gotoxy(7,22);
+          textbackground(black);
+	     textcolor(dark_grey);
+          writeln('±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±±');
+          MainScreen;
+          UpdateDisplay;
+		rand:=false;
+	end;
+
+
+procedure MonsterAttack;
+  var z,y,x,a,b,c:integer;
+     begin
+          x:=random(99)+1;
+          if HP<1 then
+               begin
+                    if monstertohit<x then
+          	          begin
+                              gotoxy(5,17);
+	                         writeln(monster,' attacks!');
+                              z:=random(damage)+random(weapondamage);
+                              z:=z-random(modifieddefense);
+                              delay(1000);
+     	                    if z<1 then
+                                     begin
+	                                     gotoxy(8,18);
+	                                     writeln(monster,' misses!');
+                                          delay(1000);
+                                          clearlines;
+                                     end
+                              else
+     		                    begin
+                                        gotoxy(8,18);
+                                        writeln(monster,' hits you with his ',monsterweapon,' for ',z,' damage!');
+                                        HP:=HP-z;
+                                        delay(1000);
+                                        clearlines;
+                                   end;
+          	          end
+                    else
+          	          begin
+                              line2:='The monster misses!';
+				          delay(1000);
+                              clearlines;
+                         end;
+     		end;
+     end;
+
+
+
+
+
+procedure Attack;
+ var z,y,x,a,b,c:integer;
+     begin
+          ClearLines;
+          line1:='You attack!';
+          UpdateDisplay;
+          x:=random(99)+1;
+          delay(1000);
+          if tohit<x then
+               begin
+    		          z:=random(damage)+random(weapondamage);
+		          z:=z-random(monsterdefense);
+                    if z<1 then
+                         begin
+                              gotoxy(8,18);
+                              writeln(monster,'''s armor is too strong!!!');
+                              gotoxy(8,19);
+                              writeln('You inflicted no damage!');
+                              delay(1000);
+                              ClearLines;
+                         	MonsterAttack;
+                         end
+                    else
+                         begin
+		     		     gotoxy(8,18);
+                              monsterHP:=monsterHP-z;
+		                    writeln('You hit ',monster,' for ',z,' damage!');
+		          		delay(1000);
+	     	               ClearLines;
+                              MonsterAttack;
+                         	if monsterHP>1 then MonsterAttack;
+                         end;
+               end
+          else
+               begin
+				line2:='  You missed!';
+                    UpdateDisplay;
+                    delay(1000);
+               	Monsterattack;
+               end;
+     end;
+
+
+procedure FightMonster;
+  var command:char; x,y,z,a,b,c:integer;
+	begin
+     	ClearDisplay;
+          gotoxy(6,17);
+          writeln('You have encountered ',monster,'!');
+          delay(1500);
+          repeat
+          cmd1:=' A - Attack';
+          cmd2:=' C - Cast Spell';
+          cmd3:=' R - Run';
+          UpdateDisplay;
+          gotoxy(60,14);
+          command:=readkey;
+          if (command='`') then
+          	ConsoleWindow;
+          if (command=chr(68)) then
+          	begin
+               	line1:='You cannot quit during a battle!';
+                    updatedisplay;
+               end;
+          if (command='R') or (command='r') then
+               begin
+                   	line1:='This is what you get for not registering!';
+                    readkey;
+                    monsterattack;
+               end;
+          if (command='c') or (command='C') then begin
+          	CastSpell; MonsterAttack; end;
+     	if (command='a') or (command='A') then begin
+          	Attack; MonsterAttack; end;
+		until (HP<1) or (monsterHP<1);
+          if HP<1 then
+          	begin
+               	cleardisplay;
+                    line1:='You died!';
+                    updatedisplay;
+               	delay(1500);
+                    cmd:=chr(68);
+               end;
+          if monsterHP<1 then
+          	begin
+     			gotoxy(6,17);
+                    writeln('You have defeated ',monster,'!');
+                    gotoxy(6,18);
+                    writeln('You gain ',gainedEXP,' experience, and ',gainedMONEY,' gold pieces');
+                    EXP:=EXP+gainedEXP;
+                    money:=money+gainedMONEY;
+{                    b:=random(99)+1;
+                    if b<10 then GetSword;
+				readkey;}
+                    delay(1500);
+               end;
+
+	end;
+
+Procedure Bootout;
+	begin
+     	textcolor(black);
+          textbackground(black);
+          clrscr;
+          textcolor(grey);
+          writeln('Soo...you have been cheating have you?');
+          readln;
+          writeln('If your not, why is your hit points zero?');
+          readln;
+          writeln('Yeah right...that''s what they all say...');
+          delay(1000);
+          writeln('I guess I''m just going to have to kick your cheating ass out of the game...');
+          delay(500);
+          writeln('Later!');
+          delay(1000);
+          exit;
+          exit;
+          exit;
+          exit;
+     end;
+
+Procedure GetMonsterStats;
+	begin
+     	if monster='Death' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='Scythe';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Centaur' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='Spear';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Centipede' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='Bite';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Ghoul' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='Claws';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Dirty Rags';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Lich' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='quarterstaff';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Minotaur' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='Spear';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Vampire' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='claws';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Wyvern' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='wings';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Crimson Death' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='sword';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Spider King' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='spear';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Lord of the Pit' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='wing';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Wraith' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='claws';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Witch' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='broom';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Skeleton' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='bone club';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Will o'' the Wisps' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='mind twist';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Beholder' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='glare';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Colossus' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='fist';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Demon' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='red spear';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Sky Dragon' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='lightning';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Golem' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='fist';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+     	if monster='Zolar' then
+          	begin
+               	monsterdamage:=150;
+                    monsterHP:=400;
+                    monsterdefense:=100;
+                    monsternumberattack:=1;
+                    monstermagic:=300;
+                    monsterMP:=300;
+                    monsterToHit:=70;
+                    monsterweapon:='sword';
+                    monsterweapondamage:=200;
+                    monsterarmor:='Skin';
+                    monsterarmordefense:=100;
+                    gainedEXP:=random(300)+300;
+                    gainedMONEY:=random(500)+1000;
+               end;
+
+     end;
+
+Procedure GetLevel15Monster;
+	begin
+		monsterchance:=random(99)+1;
+          case monsterchance of
+          	1..1: monster:='Death';
+               2..5: monster:='Centaur';
+               6..10: monster:='Centipede';
+               11..15: monster:='Ghoul';
+               16..20: monster:='Lich';
+               21..25: monster:='Minotaur';
+               26..30: monster:='Vampire';
+               31..35: monster:='Wyvern';
+               36..40: monster:='Crimson Death';
+               41..45: monster:='Spider King';
+               46..50: monster:='Lord of the Pit';
+               51..55: monster:='Wraith';
+               56..60: monster:='Witch';
+               61..65: monster:='Skeleton';
+               66..70: monster:='Will o'' the Wisps';
+               71..75: monster:='Beholder';
+               76..80: monster:='Colossus';
+               81..85: monster:='Demon';
+               86..90: monster:='Sky Dragon';
+               95..99: monster:='Golem';
+               100: monster:='Zolar';
+          end;
+     end;
+
+
+procedure GetMonster;
+	begin
+     	case level of
+          	  1..15: GetLevel15Monster;
+{                2..2: GetLevel2Monster;
+                 3..3: GetLevel3Monster;
+                 4..4: GetLevel4Monster;
+                 5..5: GetLevel5Monster;
+                 6..6: GetLevel6Monster;
+                 7..7: GetLevel7Monster;
+                 8..8: GetLevel8Monster;
+                 9..9: GetLevel9Monster;
+               10..10: GetLevel10Monster;
+               11..11: GetLevel11Monster;
+               12..12: GetLevel12Monster;
+               13..13: GetLevel13Monster;
+               14..14: GetLevel14Monster;
+               15..15: GetLevel15Monster;}
+		end;
+	end;
+
+{-------=========   ALL OTHER PROCEDURES GO BELOW THIS LINE   ========-------}
+
+
+
+
+procedure HelpMenu;
+  var z:char;
+	begin
+          repeat;
+     	clrscr;
+          textcolor(white);
+          writeln('This game was compiled in Borland C++ and parts in Turbo Pascal.');
+          writeln('This program is a copyright if Stupid Software 1997, All Rights Reserved.');
+          writeln;
+          textcolor(grey);
+          writeln('F1  - This menu');
+          writeln('F2  - Credits');
+          writeln('F5  - Save game');
+          writeln('F7  - Restore game');
+          writeln('F9  - View console commands');
+          writeln('F10 - Quit Game');
+          writeln('ESC - Return to game');
+          writeln('`   - Console Window');
+          textcolor(light_red);
+     	gotoxy(1,24);
+     	writeln('Command: ');
+          textcolor(dark_grey);
+          gotoxy(10,24);
+          z:=readkey;
+          if (z=chr(59)) then
+          	begin
+				clrscr;
+               	textcolor(white);
+                    writeln('You are already in this menu!');
+                    readkey;
+               end;
+          if (z=chr(60)) then
+          	begin
+               	clrscr;
+                    textcolor(grey);
+                    writeln('No credits have been written yet');
+               	readkey;
+               end;
+          if (z=chr(63)) then
+          	begin
+               	clrscr;
+                    textcolor(grey);
+                    writeln('You cannot save your game yet!');
+                    readkey;
+               end;
+          if (z=chr(65)) then
+          	begin
+               	clrscr;
+                    textcolor(grey);
+                    writeln('No save games were found!');
+                    readkey;
+               end;
+          if (z=chr(67)) then
+          	begin
+               	clrscr;
+                    textcolor(grey);
+                    writeln('Console commands have not been written yet!');
+                    readkey;
+               end;
+          if (z=chr(67)) then
+          	begin
+               	clrscr;
+                    QuitPrompt;
+                    cmd:=chr(68);
+               end;
+          if z='`' then ConsoleWindow;
+          until (ch=chr(27));
+	end;
+
+
+
+procedure Forest;
+	begin
+          repeat
+          ClearDisplay;
+          town:=false;
+          line1:='Off in the distance lies the depth of the forest.  It smells of ';
+          line2:='sweet greens and wood.  You enjoy the smell of fresh air as you  ';
+          line3:='travel deeper into the forest.  Chirps of the birds, and the low ';
+          line4:='hum of the crickets fills your ears.';
+		cmd1:=' L - Look for something to kill';
+          cmd2:=' H - Go to healer';
+          cmd3:=' G - Go to special places';
+          cmd4:=' X - Go back to town';
+          UpdateDisplay;
+          cmd:=readkey;
+     	if (cmd='l') or (cmd='L') then begin GetMonster; GetMonsterStats; FightMonster; end;
+          if (cmd='`') then ConsoleWindow;
+          if (cmd=chr(68)) then
+               	begin
+                    	repeat;
+                              QuitPrompt;
+	     	               if (ch='y') or (ch='Y') then exit;
+		         		until (ch='n') or (ch='N');
+                    end;
+     	until (cmd='x') or (cmd='X');
+     end;
+
+
+procedure ArmorShop;
+	begin
+     	repeat
+          	ClearDisplay;
+               line1:='The racks around you are filled with pieces of armory, jewelry and';
+               line2:='other mysterious items.  A young woman sits behind the counter, as';
+               line3:='you walk in, she says softly, "Good day, how may I serve you?"';
+               cmd1:=' S - Travel South';
+               cmd2:=' B - Purchase an item';
+               cmd3:=' F - Fence an item';
+               UpdateDisplay;
+               gotoxy(60,14);
+               cmd:=readkey;
+               if cmd='`' then ConsoleWindow;
+               if quit=true then begin exit; exit; end;
+               if (cmd=chr(68)) then
+                    begin
+                         repeat;
+                              QuitPrompt;
+	     	               if (ch='y') or (ch='Y') then exit;
+		         	     until (ch='n') or (ch='N');
+                    end;
+     	until (cmd='s') or (cmd='S');
+          cmd:='E';
+     end;
+
+procedure WeaponShop;
+	begin
+     	repeat
+	     	ClearDisplay;
+	          line1:='Various swords and axes hang on the walls.  A strong middle aged man';
+	          line2:='sits behind a dirty wooden counter.  He taps his foot up and down ';
+	          line3:='at a steady pace.  It smells of hot oil.';
+               cmd1:=' N - Travel North';
+               cmd2:=' B - Purchase an item';
+               cmd3:=' F - Fence an item';
+	          UpdateDisplay;
+	          gotoxy(60,14);
+               cmd:=readkey;
+               if cmd='`' then ConsoleWindow;
+               if quit=true then begin exit; exit; end;
+               if (cmd=chr(68)) then
+                    begin
+                         repeat;
+                              QuitPrompt;
+	     	               if (ch='y') or (ch='Y') then exit;
+		         	     until (ch='n') or (ch='N');
+                    end;
+          until (cmd='n') or (cmd='N');
+          ClearDisplay;
+          textbackground(black);
+          clrscr;
+     	cmd:='E';
+	end;
+
+procedure ArmoryPlaza;
+	begin
+     	repeat
+               ClearDisplay;
+               line1:='To the north you notice a small wooden door with a sign above it.';
+               line2:='The sign reads "Armory".  To the south, another door with a sign.';
+               line3:='above it which reads "Weapons Shop".  To the east is the tall';
+               line4:='walls of the town, and to the west is the town gates';
+               cmd1:=' N - Travel North';
+               cmd2:=' S - Travel South';
+               cmd3:=' W - Travel West';
+               UpdateDisplay;
+               gotoxy(60,14);
+               cmd:=readkey;
+     	     if cmd='`' then ConsoleWindow;
+               if quit=true then begin exit; exit; end;
+               if (cmd=chr(68)) then
+                    begin
+                         repeat;
+                              QuitPrompt;
+	     	               if (ch='y') or (ch='Y') then exit;
+		         	     until (ch='n') or (ch='N');
+                    end;
+          until (cmd='n') or (cmd='N') or (cmd='s') or (cmd='S') or (cmd='W') or (cmd='w');
+		ClearDisplay;
+          textbackground(black);
+          clrscr;
+          if (cmd='w') or (cmd='W') then cmd:='+';
+          if (cmd='s') or (cmd='S') then WeaponShop;
+          if (cmd='n') or (cmd='N') then ArmorShop;
+     end;
+
+
+
+Procedure StartInTown;
+	begin
+          repeat
+               ClearDisplay;
+               Town:=true;
+			line1:='You look in both directions, off to the east, you notice an armory';
+	          line2:='to the west, you see the plaza.  Behind you is the gates out of the';
+	          line3:='city...';
+	          cmd1:=' W - Travel West';
+	          cmd2:=' E - Travel East';
+	          cmd3:=' S - Travel South';
+               UpdateDisplay;
+               if HPmax<0 then
+               	Bootout;
+               gotoxy(60,14);
+        	     cmd:=readkey;
+     	     if cmd='`' then ConsoleWindow;
+               if quit=true then begin Exit; Exit; end;
+          	if (cmd=chr(68)) then
+               	begin
+                    	repeat;
+                              QuitPrompt;
+	     	               if (ch='y') or (ch='Y') then exit;
+		         		until (ch='n') or (ch='N');
+                    end;
+      	until (cmd='s') or (cmd='e') or (cmd='S') or (cmd='E') or (cmd='w') or (cmd='W');
+     	ClearDisplay;
+          textbackground(black);
+		textcolor(black);
+          clrscr;
+  		if (cmd='s') or (cmd='S') then Forest;
+     end;
+
+
+
+
+begin
+	Randomize;
+{    ScreenSave(debug);
+     CopyPlead;}
+     Writecmd8;
+     GetPlayerInformation;
+     InitalizePlayerStats;
+     DisplayPlayerStats(debug);
+     MainScreen;
+	UpdateStatsWindow;
+     StartInTown;
+     repeat
+          if (cmd='e') or (cmd='E') then ArmoryPlaza;
+     	if (cmd='x') or (cmd='X') or (cmd='n') or (cmd='N') then StartInTown;
+          if (cmd='e') or (cmd='E') then ArmoryPlaza;
+          if cmd='+' then StartInTown;
+     until (cmd=chr(68)) or (quit=true);
+     textcolor(grey);
+     textbackground(black);
+     clrscr;
+end.
+
+
+
+
+
+
+
+
+
+
+
+
